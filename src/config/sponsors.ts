@@ -29,9 +29,9 @@ export const SPONSORS: Sponsor[] = [
     id: 'weiloo',
     name: '卫龙中转',
     url: 'https://ai.weiloo.com/',
-    logo: '/sponsors/weiloo-wordmark.svg',
-    logoWidth: 360,
-    logoHeight: 112,
+    logo: '/sponsors/weiloo-logo-rounded.png',
+    logoWidth: 244,
+    logoHeight: 98,
     headline: {
       zh: '卫龙中转免费 Fable 5。',
       en: 'Weiloo AI proxy with free Fable 5.',

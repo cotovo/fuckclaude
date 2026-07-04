@@ -21,8 +21,6 @@ const ogLocale = lang === 'zh' ? 'zh_CN' : 'en_US';
 const title = t('meta.title');
 const description = t('meta.description');
 
-const GA_ID = 'G-S19V74WZZJ';
-
 const faq = [1, 2, 3, 4].map((i) => ({
   '@type': 'Question',
   name: t(`faq.q${i}`),
@@ -94,18 +92,6 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-    ></script>
-    <script is:inline define:vars={{ GA_ID }}>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', GA_ID);
-    </script>
   </head>
   <body>
     <slot />
