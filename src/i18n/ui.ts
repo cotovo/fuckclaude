@@ -56,8 +56,10 @@ export const ui = {
 
     'scan.detecting': 'Checking',
     'scan.ready': 'Ready to scan',
-    'result.hitsTitle': 'Matched signals',
+    'result.hitsTitle': 'Signal details',
     'result.noHits': 'No strong China signals matched. Low risk.',
+    'result.detectedValue': 'Detected value',
+    'result.matchStrength': 'Match strength',
 
     'signals.title': 'What gets scanned',
     'signals.sub': 'Six locale fingerprints, weighted to a 0–100 risk score.',
@@ -135,8 +137,10 @@ export const ui = {
 
     'scan.detecting': '检测中',
     'scan.ready': '待检测',
-    'result.hitsTitle': '命中的信号',
+    'result.hitsTitle': '检测明细',
     'result.noHits': '没有命中明显的中国信号,风险较低。',
+    'result.detectedValue': '检测值',
+    'result.matchStrength': '匹配强度',
 
     'signals.title': '检测哪些信号',
     'signals.sub': '六项区域指纹,加权得出 0–100 风险分。',

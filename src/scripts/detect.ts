@@ -24,7 +24,10 @@ const RING_C = 2 * Math.PI * RING_R;
 
 interface Hit {
   signal: SignalDef;
+  raw: string;
+  score: number;
   contribution: number;
+  verdict: ReturnType<typeof signalVerdict>;
 }
 
 type MascotState = 'doze' | 'search' | 'low' | 'medium' | 'high';
@@ -92,19 +95,48 @@ function finalize(total: number, hits: Hit[]) {
   const hitsBox = q('#result-hits');
   if (hitsBox) hitsBox.innerHTML = '';
 
-  if (hits.length === 0) {
+  if (hits.every((hit) => hit.contribution === 0)) {
     if (titleEl) titleEl.textContent = t('result.noHits');
   } else {
     if (titleEl) titleEl.textContent = t('result.hitsTitle');
-    for (const { signal, contribution } of hits) {
-      const chip = document.createElement('span');
-      chip.className = 'chip';
-      chip.setAttribute('data-verdict', signalVerdict(contribution / signal.weight));
-      chip.innerHTML =
-        `<span class="chip__icon">${signal.icon}</span>` +
-        `<span>${t(`signal.${signal.id}.name`)}</span>` +
-        `<b>+${contribution}</b>`;
-      hitsBox.appendChild(chip);
+    for (const { signal, raw, score, contribution, verdict } of hits) {
+      const item = document.createElement('article');
+      item.className = 'signal-detail';
+      item.setAttribute('data-verdict', verdict);
+
+      const icon = document.createElement('span');
+      icon.className = 'signal-detail__icon';
+      icon.innerHTML = signal.icon;
+
+      const body = document.createElement('div');
+      body.className = 'signal-detail__body';
+
+      const head = document.createElement('div');
+      head.className = 'signal-detail__head';
+
+      const name = document.createElement('strong');
+      name.textContent = t(`signal.${signal.id}.name`);
+
+      const points = document.createElement('b');
+      points.className = 'signal-detail__points';
+      points.textContent = `+${contribution}`;
+
+      const value = document.createElement('p');
+      value.className = 'signal-detail__value';
+      value.textContent = `${t('result.detectedValue')}: ${raw}`;
+
+      const meta = document.createElement('p');
+      meta.className = 'signal-detail__meta';
+      meta.textContent = `${t('result.matchStrength')}: ${Math.round(score * 100)}%`;
+
+      const desc = document.createElement('p');
+      desc.className = 'signal-detail__desc';
+      desc.textContent = t(`signal.${signal.id}.desc`);
+
+      head.append(name, points);
+      body.append(head, value, meta, desc);
+      item.append(icon, body);
+      hitsBox.appendChild(item);
     }
   }
   const result = q('#result');
@@ -155,7 +187,7 @@ async function run() {
     }
 
     setRing(Math.min(100, total));
-    if (verdict !== 'low') hits.push({ signal, contribution });
+    hits.push({ signal, raw: outcome.raw, score: outcome.score, contribution, verdict });
     await delay(SETTLE_MS);
   }
 
