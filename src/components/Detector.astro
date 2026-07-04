@@ -1,0 +1,158 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+import { SIGNALS } from '../config/signals';
+import LangToggle from './LangToggle.astro';
+import ScoreRing from './ScoreRing.astro';
+import Mascot from './Mascot.astro';
+import Sponsors from './Sponsors.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = lang === 'zh' ? '/zh/' : '/';
+---
+
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href={home}>
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="currentColor"></rect>
+        <g fill="#FAF9F5">
+          <rect x="26.9" y="8" width="7.6" height="29" rx="3.8"></rect>
+          <rect x="18.9" y="24.5" width="6.4" height="11" rx="3.2"></rect>
+          <rect x="36.1" y="24.5" width="6.4" height="11" rx="3.2"></rect>
+          <rect x="16.9" y="30" width="27.6" height="24" rx="9"></rect>
+          <rect x="40.6" y="32.5" width="7.6" height="16" rx="3.8" transform="rotate(-24 44.4 40.5)"></rect>
+        </g>
+      </svg>
+      <span class="brand__text">{t('nav.title')}</span>
+    </a>
+    <nav class="nav__actions">
+      <LangToggle lang={lang} />
+      <a
+        class="icon-link"
+        href="https://github.com/cotovo/fuckclaude"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"></path>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<Sponsors lang={lang} />
+
+<main class="wrap">
+  <section class="hero">
+    <div class="credit">
+      <span class="credit__spark" aria-hidden="true"></span>
+      <span class="credit__text">{t('credit')}</span>
+    </div>
+
+    <h1>{t('hero.title')}</h1>
+
+    <div class="panel">
+      <div class="panel__main">
+        <Mascot />
+        <ScoreRing lang={lang} />
+      </div>
+
+      <div class="result" id="result" hidden>
+        <p class="result__title" id="result-title"></p>
+        <div class="result__hits" id="result-hits"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scan-sec" aria-labelledby="scan-title">
+    <div class="section-head">
+      <h2 id="scan-title">{t('signals.title')}</h2>
+      <p>{t('signals.sub')}</p>
+    </div>
+    <ol class="scan-list" id="scan">
+      {
+        SIGNALS.map((signal) => (
+          <li class="scan-row is-pending" data-signal={signal.id}>
+            <span class="scan-row__icon" set:html={signal.icon} />
+            <span class="scan-row__main">
+              <span class="scan-row__name">
+                {t(`signal.${signal.id}.name`)}
+                <span class="badge">{t('ui.weight')} {signal.weight}</span>
+                {signal.claudeUsed && <span class="badge badge--claude">{t('ui.claudeBadge')}</span>}
+              </span>
+              <span class="scan-row__desc">{t(`signal.${signal.id}.desc`)}</span>
+            </span>
+            <span class="scan-row__status">
+              <span class="scan-row__value" data-field="value" />
+              <span class="scan-row__contrib" data-field="contribution" />
+              <span class="dot" data-field="dot" />
+              <span class="spinner" aria-hidden="true" />
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section id="how-sec" aria-labelledby="how-title">
+    <div class="section-head">
+      <h2 id="how-title">{t('how.title')}</h2>
+    </div>
+    <div class="prose">
+      <p>{t('how.p1')}</p>
+      <p>{t('how.p2')}</p>
+    </div>
+  </section>
+
+  <section id="faq-sec" aria-labelledby="faq-title">
+    <div class="section-head">
+      <h2 id="faq-title">{t('faq.title')}</h2>
+    </div>
+    <div class="faq">
+      {
+        [1, 2, 3, 4].map((i) => (
+          <details>
+            <summary>{t(`faq.q${i}`)}</summary>
+            <p>{t(`faq.a${i}`)}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="privacy-sec">
+    <div class="privacy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="9" rx="2"></rect>
+        <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+      </svg>
+      <div>
+        <h2>{t('privacy.title')}</h2>
+        <p>{t('privacy.body')}</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<Footer lang={lang} />
+
+<script>
+  import '../scripts/detect';
+</script>
+
+<style>
+  .brand__text {
+    max-width: 52vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

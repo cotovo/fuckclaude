@@ -1,0 +1,22 @@
+---
+import { languages, localePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<div class="lang-toggle" role="group" aria-label="Language / 语言">
+  {
+    (Object.entries(languages) as [Lang, string][]).map(([code, label]) => (
+      <a
+        href={localePath(code)}
+        hreflang={code === 'zh' ? 'zh-CN' : 'en'}
+        aria-current={code === lang ? 'page' : undefined}
+      >
+        {label}
+      </a>
+    ))
+  }
+</div>
